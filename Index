@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora Shopee PRO</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #f5f5f5;
+  margin: 0;
+  padding: 10px;
+}
+
+.container {
+  max-width: 420px;
+  margin: auto;
+  background: white;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2, h3 {
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  background: #ee4d2d;
+  color: white;
+  font-size: 16px;
+}
+
+.resultado {
+  margin-top: 15px;
+  padding: 10px;
+  background: #fafafa;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.copy {
+  background: #333;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>💰 Shopee PRO</h2>
+
+<h3>📦 Produto</h3>
+<input id="custo" placeholder="Custo produto">
+<input id="embalagem" placeholder="Embalagem">
+<input id="taxa" placeholder="Taxa Shopee (%)">
+<input id="taxaFixa" placeholder="Taxa fixa (R$)">
+<input id="afiliado" placeholder="Afiliado (%)">
+<input id="lucro" placeholder="Lucro (%)">
+
+<h3>📦 Kit</h3>
+<input id="quantidade" placeholder="Quantidade">
+<input id="desconto" placeholder="Desconto kit (%)">
+
+<button onclick="calcular()">Calcular</button>
+<button class="copy" onclick="copiar()">📋 Copiar</button>
+
+<div class="resultado" id="resultado"></div>
+
+</div>
+
+<script>
+
+function precoPsicologico(valor){
+  return Math.floor(valor) + 0.99;
+}
+
+function calcular() {
+
+  let custo = parseFloat(custoInput.value) || 0;
+  let embalagem = parseFloat(embalagemInput.value) || 0;
+  let taxa = (parseFloat(taxaInput.value) || 0) / 100;
+  let taxaFixa = parseFloat(taxaFixaInput.value) || 0;
+  let afiliado = (parseFloat(afiliadoInput.value) || 0) / 100;
+  let lucro = (parseFloat(lucroInput.value) || 0) / 100;
+
+  let quantidade = parseFloat(quantidadeInput.value) || 1;
+  let desconto = (parseFloat(descontoInput.value) || 0) / 100;
+
+  let custoTotal = custo + embalagem;
+
+  let precoUnit = (custoTotal + taxaFixa) / (1 - taxa - afiliado - lucro);
+  let precoUnitPsico = precoPsicologico(precoUnit);
+
+  let precoKitBruto = precoUnit * quantidade;
+  let precoKit = precoKitBruto * (1 - desconto);
+  let precoKitPsico = precoPsicologico(precoKit);
+
+  let receitaLiquida = precoKit * (1 - taxa - afiliado) - taxaFixa;
+  let custoTotalKit = custoTotal * quantidade;
+  let lucroReal = receitaLiquida - custoTotalKit;
+
+  resultado.innerHTML = `
+  🔹 <b>UNITÁRIO</b><br>
+  💰 Preço: R$ ${precoUnit.toFixed(2)}<br>
+  🧠 Psicológico: R$ ${precoUnitPsico.toFixed(2)}<br><br>
+
+  📦 <b>KIT (${quantidade}x)</b><br>
+  💰 Preço: R$ ${precoKit.toFixed(2)}<br>
+  🧠 Psicológico: R$ ${precoKitPsico.toFixed(2)}<br><br>
+
+  🟢 <b>LUCRO REAL</b><br>
+  💵 R$ ${lucroReal.toFixed(2)}<br><br>
+
+  📊 <b>SIMULAÇÃO</b><br>
+  10 kits: R$ ${(lucroReal * 10).toFixed(2)}<br>
+  50 kits: R$ ${(lucroReal * 50).toFixed(2)}<br>
+  100 kits: R$ ${(lucroReal * 100).toFixed(2)}
+  `;
+}
+
+function copiar(){
+  navigator.clipboard.writeText(resultado.innerText);
+  alert("Copiado!");
+}
+
+// atalhos
+const custoInput = document.getElementById("custo");
+const embalagemInput = document.getElementById("embalagem");
+const taxaInput = document.getElementById("taxa");
+const taxaFixaInput = document.getElementById("taxaFixa");
+const afiliadoInput = document.getElementById("afiliado");
+const lucroInput = document.getElementById("lucro");
+const quantidadeInput = document.getElementById("quantidade");
+const descontoInput = document.getElementById("desconto");
+const resultado = document.getElementById("resultado");
+
+</script>
+
+</body>
+</html>
